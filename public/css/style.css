@@ -1,0 +1,25 @@
+#chat-container{
+background-color: aliceblue;
+width: 100%;
+height: 400px;
+overflow-y: scroll;
+}
+.border{
+    width: 85%;
+}
+.btn-primary{
+    background-color: blue;
+}
+.chat-section{
+    display: none;
+}
+.current-user-chat{
+    text-align: right;
+    margin: 10px;
+}
+.current-user-chat h4{
+    font-size: 30px;
+}
+.distance-user-chat h4{
+    font-size: 30px;
+}
