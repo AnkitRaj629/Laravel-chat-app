@@ -9,6 +9,7 @@
                         @foreach ($users as $user)
                             <li class="list-group-item list-group-item-dark user-list" data-id="{{$user->id}}">
                                 {{$user->name}}
+                                <b><sup id="{{$user->id}}-status" class="offline-status">offline</sup></b>
                             </li>
                         @endforeach
                     </ul>
@@ -43,4 +44,32 @@
 
     </div>
 
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteChatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Chat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" id="delete-chat-form">
+
+            <div class="modal-body">
+                <input type="hidden" name="id" id="delete-chat-id">
+                <p>Are you sure you want to delete message?</p>
+                <p><b id="delete-message"></b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  
+  
 </x-app-layout>

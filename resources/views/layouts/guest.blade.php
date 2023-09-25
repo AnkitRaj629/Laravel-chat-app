@@ -8,12 +8,14 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
          <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-         <script src="{{ mix('js/app.js') }}" defer></script>
+         <script src="{{ mix('js/app.js') }}"></script>
          <link rel="stylesheet" href="{{ asset('css/style.css') }}">
          <script src="{{ asset('js/custom.js') }}"></script>
     </head>

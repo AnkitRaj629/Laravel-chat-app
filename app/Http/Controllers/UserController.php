@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Chat;
+use App\Events\MessageEvent;
+use App\Events\MessageDeletedEvent;
 
 
 class UserController extends Controller
@@ -24,7 +26,48 @@ class UserController extends Controller
                 'message' => $request->message
             ]);
 
+            event(new MessageEvent($chat));
+
             return response()->json([ 'success' => true,'data' =>$chat]);
+
+        }
+        catch(\Exception $e){
+
+            return response()->json([ 'success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function loadChats(Request $request)
+    {
+        try{
+        
+            $chats = Chat::where(function($query) use ($request){
+                $query->where('sender_id','=',$request->sender_id)
+                ->orWhere('sender_id','=',$request->receiver_id);
+            })->where(function($query) use ($request){
+                $query->where('receiver_id','=',$request->sender_id)
+                ->orWhere('receiver_id','=',$request->receiver_id);
+            })->get();
+
+            return response()->json([ 'success' => true,'data' => $chats ]);
+
+        }
+        catch(\Exception $e){
+
+            return response()->json([ 'success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+
+
+    public function deleteChat(Request $request)
+    {
+        try{
+        
+           Chat::where('id',$request->id)->delete();
+
+           event(new MessageDeletedEvent($request->id));
+
+            return response()->json([ 'success' => true,'msg' => 'Chats deleted Successfully' ]);
 
         }
         catch(\Exception $e){

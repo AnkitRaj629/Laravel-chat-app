@@ -29,4 +29,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::post('/save-chat',[UserController::class,'savechat']);
+Route::post('/save-chat',[UserController::class,'saveChat']);
+Route::post('/load-chats',[UserController::class,'loadChats']);
+
+Route::post('/delete-chat',[UserController::class,'deleteChat']);
