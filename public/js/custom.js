@@ -177,3 +177,135 @@ Echo.private('message-deleted')
 .listen('MessageDeletedEvent' ,(data)=>{
  $('#'+data.id+'-chat').remove();
 });
+
+
+// chat group script
+
+$(document).ready(function(){
+
+    $('#createGroupForm').submit(function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url:"/create-group",
+            type:"POST",
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(res){
+                alert(res.msg);
+                if(res.success){
+                    location.reload();
+                }
+            }
+        });
+    });
+});
+
+//member script
+$(document).ready(function(){
+    $('.addMember').click(function(){
+
+        var id = $(this).attr('data-id');
+        var limit = $(this).attr('data-limit');
+     
+        $('#add-group-id').val(id);
+        $('#add-limit').val(limit);
+     
+        $.ajax({
+          url:"/get-member",
+          type:"POST",
+          data:{ group_id:id},
+          success:function(res){
+           
+             if(res.success){
+                 
+                var users = res.data;
+                var html = '';
+
+                for(let i = 0; i < users.length; i++)
+                {
+                    let isGroupMemberChecked = '';
+                    if(users[i]['group_user'] !=null){
+                        isGroupMemberChecked = 'checked';
+                    }
+                    html +=`
+                    <tr>
+                        <td>
+                            <input type="checkbox" name = "members[]" value="`+users[i]['id']+`" `+isGroupMemberChecked+`/>
+                        </td>
+                        <td>
+                            `+users[i]['name']+`
+                        </td>
+                    </tr>
+                    `
+                    $(".addMembersInTable").html(html);
+                }
+             }
+             else{
+                 alert(res.msg);
+             }
+          }
+        });
+     });
+
+     $('#add-member-form').submit(function (e){
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url:"add-member",
+            type:"POST",
+            data: formData,
+            success:function(res){
+                if(res.success){
+                    $('#memberModal').modal('hide');
+                    $('#add-member-form')[0].reset();
+                    alert(res.msg);
+                }
+                else{
+                    $('#add-member-error').text(res.msg);
+                    setTimeout(function(){
+                       $('#add-member-error').text('');
+                    },3000);
+
+                }
+            }
+        })
+
+     });
+     // delelte Group chat
+
+     $('.deleteGroup').click(function(){
+        $('#delete-group-id').val($(this).attr('data-id'));
+        $('#group-name').text($(this).attr('data-name'));
+
+     });
+
+     $('#delete-group-form').submit(function (e){
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url:"/delete-group",
+            type:"POST",
+            data:formData,
+            success: function(res)
+            {
+                if(res.success)
+                {
+                    location.reload();
+                }
+                else{
+                    alert(res.msg);
+                }
+            }
+      
+        });
+
+     });
+});//documen ready
+

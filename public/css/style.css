@@ -62,3 +62,12 @@ margin: 0 auto;
 .btn-danger{
     background-color: red;
 }
+
+.addMemberTable{
+    overflow-y: scroll;
+    height: 100px;
+    width: 100%;
+}
+#add-member-error{
+    color: red;
+}

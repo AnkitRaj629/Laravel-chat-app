@@ -33,3 +33,14 @@ Route::post('/save-chat',[UserController::class,'saveChat']);
 Route::post('/load-chats',[UserController::class,'loadChats']);
 
 Route::post('/delete-chat',[UserController::class,'deleteChat']);
+
+//groups route
+Route::get('/groups', [UserController::class,'loadGroup'])->middleware(['auth', 'verified'])->name('groups');
+Route::post('/create-group', [UserController::class,'createGroup'])->middleware(['auth', 'verified'])->name('createGroup');
+Route::post('/get-member', [UserController::class,'getMembers'])->middleware(['auth', 'verified'])->name('getMembers');
+Route::post('/add-member', [UserController::class,'addMembers'])->middleware(['auth', 'verified'])->name('addMembers');
+Route::post('/delete-group', [UserController::class,'deleteGroup'])->middleware(['auth', 'verified'])->name('deleteGroup');
+
+
+
+
