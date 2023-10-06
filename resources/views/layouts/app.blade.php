@@ -22,6 +22,7 @@
         <script>
             var sender_id = @json(auth()->user()->id);
             var receiver_id;
+            var global_group_id;
         </script>
     </head>
     <body class="font-sans antialiased">

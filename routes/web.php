@@ -40,6 +40,19 @@ Route::post('/create-group', [UserController::class,'createGroup'])->middleware(
 Route::post('/get-member', [UserController::class,'getMembers'])->middleware(['auth', 'verified'])->name('getMembers');
 Route::post('/add-member', [UserController::class,'addMembers'])->middleware(['auth', 'verified'])->name('addMembers');
 Route::post('/delete-group', [UserController::class,'deleteGroup'])->middleware(['auth', 'verified'])->name('deleteGroup');
+Route::post('/update-group', [UserController::class,'updateGroup'])->middleware(['auth', 'verified'])->name('updateGroup');
+
+Route::get('/groupChats', [UserController::class,'groupChats'])->middleware(['auth', 'verified'])->name('groupChats');
+
+Route::post('/save-group-chat',[UserController::class,'saveGroupChat']);
+
+Route::post('/load-group-chats',[UserController::class,'loadGroupChats']);
+
+
+
+
+
+
 
 
 

@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class GroupChat extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'sender_id',
         'group_id',
-        'user_id',
+        'message'
+
     ];
 
-
-    public function getGroup(){
-        return $this->hasone(Group::class,'id','group_id');
+    public function userData(){
+        return $this->hasOne(User::class, 'id', 'sender_id');
     }
 }

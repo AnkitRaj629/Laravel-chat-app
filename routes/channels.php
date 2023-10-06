@@ -27,3 +27,7 @@ Broadcast::channel('broadcast-message',function($user){
 Broadcast::channel('message-deleted',function($user){
     return $user;
 });
+Broadcast::channel('broadcast-group-message',function($user){
+    return $user;
+});
+

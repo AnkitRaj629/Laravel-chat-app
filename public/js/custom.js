@@ -8,6 +8,12 @@ $.ajaxSetup({
 $(document).ready(function(){
     $('.user-list').click(function(){
 
+         // Remove any existing 'active' class from all .group-list elements
+    $('.user-list').removeClass('active');
+
+    // Add the 'active' class to the clicked .group-list element
+    $(this).addClass('active');
+
         $('#chat-container').empty(); // Clear the chat container
 
 
@@ -50,6 +56,7 @@ $(document).ready(function(){
                     </p>
                     </div>
                     `;
+                
                     $('#chat-container').append(html);
                     scrollChat();
 
@@ -203,6 +210,13 @@ $(document).ready(function(){
     });
 });
 
+function scrollGroupChat(){
+    $('#group-chat-container').animate({
+        scrollTop: $('#group-chat-container').offset().top + $('#group-chat-container')[0].scrollHeight
+    },0);
+}
+
+
 //member script
 $(document).ready(function(){
     $('.addMember').click(function(){
@@ -307,5 +321,187 @@ $(document).ready(function(){
         });
 
      });
+
+  //update group working script
+
+   $('.updateGroup').click(function(){
+
+       $('#update-group-id').val($(this).attr('data-id'));
+       $('#update-group-name').val($(this).attr('data-name'));
+       $('#update-group-limit').val($(this).attr('data-limit'));
+   });
+
+   $('#updateGroupForm').submit(function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url:"/update-group",
+            type:"POST",
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(res){
+                alert(res.msg);
+                if(res.success){
+                    location.reload();
+                }
+            }
+        })
+   });
+
+   //group-chat script starts here
+   $('.group-list').click(function(){
+    // Remove any existing 'active' class from all .group-list elements
+    $('.group-list').removeClass('active');
+
+    // Add the 'active' class to the clicked .group-list element
+    $(this).addClass('active');
+    var groupId = $(this).attr('data-id');
+
+    global_group_id = groupId;
+
+
+    $('#group-chat-container').empty(); // Clear the chat container
+
+    $('.group-start-head').hide();
+    $('.group-chat-section').show();
+
+    loadGroupChats();
+    
+    });
+
+    //group chat Script implemented
+
+    $('#group-chat-form').submit(function(e){
+        e.preventDefault();
+
+        var message = $('#group-message').val();
+        $.ajax({
+            url:"/save-group-chat",
+            type:"POST",
+            data: { 
+                sender_id:sender_id, 
+                group_id:global_group_id, 
+                message:message 
+            },
+            success:function(res){
+                if(res.success){
+
+                    $('#group-message').val('');
+                    let chat = res.data.message;
+                    let html = `
+                    <div class="current-user-chat" id='`+res.data.id+`-chat'>
+                    <p>
+                       <span>`+chat+`</span>
+
+                    </p>`
+                    let timestamp = new Date(res.data.created_at);
+
+                
+                    let formattedDate = timestamp.toLocaleDateString('en-GB');  
+                    let formattedTime = timestamp.toLocaleTimeString('en-GB');
+                    html +=`<div class="user-data">`;
+                    html +=`<b>Me</b>`;
+                    html += ` `  + formattedDate +`  `+formattedTime+``;
+                    html+=`</div>`;
+                    html+=`</div>`;
+                    $('#group-chat-container').append(html);
+                    scrollGroupChat();
+
+                }
+                else{
+                    alert(res.msg);
+                }
+
+            }
+
+        })
+    });
+   
 });//documen ready
 
+Echo.private('broadcast-group-message')
+.listen('.getGroupChatMessage',(data) => {
+    
+if(sender_id != data.chat.sender_id && global_group_id == data.chat.group_id)
+{
+    let html =`<div class="distance-user-chat" id='`+data.chat.id+`-chat'>
+    <p>`+data.chat.message+`</p>`
+    let timestamp = new Date(data.chat.user_data.created_at);
+
+                
+    let formattedDate = timestamp.toLocaleDateString('en-GB');  
+    let formattedTime = timestamp.toLocaleTimeString('en-GB');
+    html +=`<div class="user-data">`;
+    html +=`<b>`+data.chat.user_data.name+`</b>`;
+    html += ` `  + formattedDate +`  `+formattedTime+``;
+    html+=`</div>`;
+    html+=`</div>`;
+
+    $('#group-chat-container').append(html);
+    scrollGroupChat();
+
+}
+});
+
+ function loadGroupChats(){
+
+    $('#group-chat-container').html('');
+
+    $.ajax({
+        url:"/load-group-chats",
+        type:"POST",
+        data:{ group_id: global_group_id},
+        success:function(res){
+    
+
+            if(res.success){
+                let chats = res.chats;
+                let html = '';
+               
+                for(let i= 0; i < chats.length; i++){
+                    let addclass = 'distance-user-chat';
+                   
+                    if(chats[i].sender_id ==  sender_id){
+                    addclass = 'current-user-chat';
+
+                    }
+                    let timestamp = new Date(chats[i].created_at);
+
+                
+                    let formattedDate = timestamp.toLocaleDateString('en-GB');  
+                    let formattedTime = timestamp.toLocaleTimeString('en-GB');
+
+                    html += `<div class="`+addclass+`" id='`+chats[i].id+`-chat'>`;
+
+
+                    html += `<p>`+chats[i].message+`</p>`
+
+                    
+                    html +=`
+                    <div class="user-data">`;
+                    if(chats[i].sender_id ==  sender_id){
+                        html +=`<b>Me</b>`;
+    
+                        }
+                    else{
+                        html +=`<b>`+chats[i].user_data.name+`</b>`;
+                    }    
+                    html += ` `  + formattedDate +`  `+formattedTime+``;
+                    
+                    html +=`</div>`;
+                    html +=`</div>`;
+                    html +=` `;
+                }
+
+                $('#group-chat-container').append(html);
+                scrollGroupChat();
+            
+            }
+            else{
+                alert(res.msg);
+            }
+        }
+    });
+}

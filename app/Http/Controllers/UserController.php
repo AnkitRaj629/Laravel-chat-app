@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Chat;
+use App\Models\GroupChat;
 use App\Models\Group;
 use App\Models\Member;
 use App\Events\MessageEvent;
+use App\Events\GroupMessageEvent;
 use App\Events\MessageDeletedEvent;
 
 
@@ -170,6 +172,7 @@ class UserController extends Controller
         try{
 
            Group::where('id',$request->id)->delete();
+           Member::where('group_id',$request->id)->delete();
            
             return response()->json([ 'success' => true]);
 
@@ -182,4 +185,79 @@ class UserController extends Controller
         }
 
     }
+
+    public function updateGroup(Request $request){
+        try{
+
+           $data = [
+            'creator_id' => auth()->user()->id,
+            'name'=> $request->name,
+            'join_limit'=>$request->limit
+           ];
+
+          $groupData = Group::where('id',$request->id)->first();
+
+            if($request->limit < $groupData->join_limit){
+                Member::where('group_id',$request->id)->delete();
+            }
+
+            Group::where('id',$request->id)->update($data);
+
+            return response()->json([ 'success' => true, 'msg'=>'Group has been updated successfully']);
+
+
+        }
+
+        catch(\Exception $e){
+
+            return response()->json([ 'success' => false, 'msg' => $e->getMessage()]);
+        }
+
+    }
+
+    public function groupChats(){
+
+        $groups = Group::where('creator_id', auth()->user()->id)->get();
+        $joinedGroup =  Member::with('getGroup')->where('user_id',auth()->user()->id)->get();
+    
+        return view('group-chats',compact(['groups','joinedGroup']));
+    }
+
+    public function saveGroupChat(Request $request)
+    {
+        try{
+           $chat = GroupChat::create([
+                'sender_id' => $request->sender_id,
+                'group_id' => $request->group_id,
+                'message' => $request->message
+            ]);
+
+            $chat = GroupChat::with('userData')->where('id',$chat->id)->first();
+
+            event(new GroupMessageEvent($chat));
+
+            return response()->json([ 'success' => true,'data' =>$chat]);
+
+        }
+        catch(\Exception $e){
+
+            return response()->json([ 'success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function loadGroupChats(Request $request){
+
+        try{
+           
+           $chats = GroupChat::with('userData')->where('group_id', $request->group_id)->get();
+ 
+             return response()->json([ 'success' => true,'chats' =>$chats]);
+ 
+         }
+         catch(\Exception $e){
+ 
+             return response()->json([ 'success' => false, 'msg' => $e->getMessage()]);
+         }
+    }
+
 }

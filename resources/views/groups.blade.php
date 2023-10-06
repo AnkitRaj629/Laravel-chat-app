@@ -33,6 +33,7 @@
                             <td><a style="cursor:pointer" class="addMember" data-limit="{{$group->join_limit}}" data-id="{{$group->id}}" data-bs-toggle="modal" data-bs-target="#memberModal">Members</a></td>
                             <td>
                                 <i class="fa fa-trash deleteGroup" aria-hidden="true" data-id="{{$group->id}}" data-name="{{$group->name}}" data-bs-toggle="modal" data-bs-target="#deleteGroupModal"></i>
+                                <i class="fa fa-pencil updateGroup" aria-hidden="true" data-id="{{$group->id}}" data-name="{{$group->name}}" data-limit="{{$group->join_limit}}" data-bs-toggle="modal" data-bs-target="#updateGroupModal"></i>
                             </td>
                         </tr>
 
@@ -147,6 +148,31 @@
         </div>
         {{-- modal end --}}
 
+        {{-- update group modal --}}
+
+        <div class="modal fade" id="updateGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Group</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form enctype="multipart/form-data" id="updateGroupForm">
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="update-group-id">
+                            <input type="text" name="name" id="update-group-name" placeholder="Enter Group Name" required class="w-100 mb-2">
+                            <input type="number" name="limit" id="update-group-limit" min="1" placeholder="Enter User Limit" required class="w-100 mb-2">
+                            <p>If you reduce the limit of group then every member will be deleted</p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>    
+                </div>
+            </div>
+        </div>
 
     </div>
 
