@@ -8,10 +8,10 @@ $.ajaxSetup({
 $(document).ready(function(){
     $('.user-list').click(function(){
 
-         // Remove any existing 'active' class from all .group-list elements
+        
     $('.user-list').removeClass('active');
 
-    // Add the 'active' class to the clicked .group-list element
+    
     $(this).addClass('active');
 
         $('#chat-container').empty(); // Clear the chat container
@@ -168,6 +168,7 @@ Echo.private('broadcast-message')
     
 if(sender_id== data.chat.receiver_id && receiver_id == data.chat.sender_id)
 {
+    
     let html =`<div class="distance-user-chat" id='`+data.chat.id+`-chat'>
     <p>`+data.chat.message+`</p>
     </div>`;
@@ -505,3 +506,5 @@ if(sender_id != data.chat.sender_id && global_group_id == data.chat.group_id)
         }
     });
 }
+
+

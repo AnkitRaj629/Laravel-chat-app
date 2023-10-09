@@ -26,6 +26,12 @@
                         {{ __('Chat (Groups)') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex hover:text-gray-700">
+                    <i class="fas fa-bell"></i>
+                    <span id="message-counter" class="bg-red-500 text-white px-2 py-1 rounded-full text-xs absolute -top-1 -right-1"></span>
+                    <!-- You can add a notification count badge here if needed -->
+                </div>
+              
             </div>
 
             <!-- Settings Dropdown -->

@@ -11,6 +11,8 @@
                                 {{$user->name}}
                                 <b><sup id="{{$user->id}}-status" class="offline-status">offline</sup></b>
                             </li>
+                                    
+                            
                         @endforeach
                     </ul>
                 </div>
