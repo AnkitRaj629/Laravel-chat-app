@@ -1,3 +1,7 @@
+![Screenshot (47)](https://github.com/AnkitRaj629/Laravel-chat-app/assets/138218535/8bf3fe6e-f4da-4bc6-bb6e-7ed85d7871cc)
+![Screenshot (48)](https://github.com/AnkitRaj629/Laravel-chat-app/assets/138218535/122180e7-613f-4515-9355-27f3d0fcfc05)
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
